@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Loading...</title>
+  <meta name="description" content="">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="/cosmo.config.js"></script>
+  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script>
+    document.title = COSMO.name + ' — ' + COSMO.title;
+    document.querySelector('meta[name="description"]').content = COSMO.hero.tagline;
+  </script>
+</head>
+<body>
+
+  <!-- ─── NAV (injected by nav.js) ─── -->
+  <nav id="mainNav"></nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="mesh-blob mesh-blob-1"></div>
+      <div class="mesh-blob mesh-blob-2"></div>
+      <div class="mesh-blob mesh-blob-3"></div>
+    </div>
+    <div class="container hero-content">
+      <p class="hero-eyebrow" id="heroEyebrow"></p>
+      <h1 class="hero-name" id="heroName"></h1>
+      <p class="hero-tagline" id="heroTagline"></p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" id="heroCtaPrimary"></button>
+        <a class="btn btn-secondary" id="heroCtaSecondary"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROOF POINTS ─── -->
+  <section class="proof-bar">
+    <div class="container">
+      <div class="proof-grid" id="proofGrid"></div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURED PROJECTS ─── -->
+  <section class="section" id="featuredProjects">
+    <div class="container">
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="project-cards" id="projectCards"></div>
+    </div>
+  </section>
+
+  <!-- ─── CTA BAR ─── -->
+  <section class="section section-alt" id="ctaBar">
+    <div class="container">
+      <div class="cta-grid">
+
+        <!-- Contact Form Card -->
+        <div class="card cta-card">
+          <h3>Get in Touch</h3>
+          <p>Have a project in mind? Let's talk.</p>
+          <form id="contactForm" class="contact-form">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Your email" required>
+            <textarea name="message" placeholder="Tell me about your project..." rows="4" required></textarea>
+            <div id="contactTurnstile"></div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+            <div id="contactStatus" class="form-status"></div>
+          </form>
+        </div>
+
+        <!-- Products CTA Card (conditional) -->
+        <div class="card cta-card" id="productsCta" style="display:none;">
+          <h3>Products</h3>
+          <p>Check out ready-made tools and products available for purchase or download.</p>
+          <a href="/products.html" class="btn btn-secondary">View Products</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CALLOUT ─── -->
+  <section class="section callout-section">
+    <div class="container callout-content">
+      <h2>This AI is proof of what I build</h2>
+      <p>The chatbot on this site isn't a template or a plugin. It's a custom-built AI agent that knows my entire career, powered by Claude. It's one example of what I can build for you.</p>
+      <a class="btn btn-outline" id="calloutLink" href="/colophon.html">See How It Works</a>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-powered" id="footerPowered"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+  </footer>
+
+  <script src="/js/markdown.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/chat-widget.js"></script>
+
+  <script>
+    // ─── Hero
+    document.getElementById('heroEyebrow').textContent = COSMO.hero.eyebrow;
+    document.getElementById('heroName').textContent = COSMO.name;
+    document.getElementById('heroTagline').textContent = COSMO.hero.tagline;
+
+    const ctaPrimary = document.getElementById('heroCtaPrimary');
+    ctaPrimary.textContent = COSMO.hero.ctaPrimary.label;
+    ctaPrimary.addEventListener('click', function() {
+      if (window.openChatWith) window.openChatWith(COSMO.hero.ctaPrimary.message);
+    });
+
+    const ctaSecondary = document.getElementById('heroCtaSecondary');
+    ctaSecondary.textContent = COSMO.hero.ctaSecondary.label;
+    ctaSecondary.href = COSMO.hero.ctaSecondary.href;
+
+    // ─── Proof Points
+    const proofGrid = document.getElementById('proofGrid');
+    COSMO.proofPoints.forEach(function(point) {
+      const div = document.createElement('div');
+      div.className = 'proof-item';
+      div.innerHTML = '<span class="proof-number">' + point.number + '</span>'
+                    + '<span class="proof-label">' + point.label + '</span>';
+      proofGrid.appendChild(div);
+    });
+
+    // ─── Featured Project Cards
+    const projectCards = document.getElementById('projectCards');
+    COSMO.projects.forEach(function(project) {
+      const card = document.createElement('div');
+      card.className = 'card project-card';
+
+      let badges = '';
+      if (project.badges && project.badges.length) {
+        badges = '<div class="badge-row">' + project.badges.map(function(b) {
+          return '<span class="badge">' + b + '</span>';
+        }).join('') + '</div>';
+      }
+
+      card.innerHTML = '<h3>' + project.name + '</h3>'
+                     + '<p class="project-tagline">' + project.tagline + '</p>'
+                     + badges
+                     + '<div class="card-actions">'
+                     + '<a href="/projects.html" class="btn btn-sm btn-outline">View Details</a>'
+                     + '</div>';
+      projectCards.appendChild(card);
+    });
+
+    // ─── Products CTA (show only if products is not null)
+    if (COSMO.products && COSMO.products.length) {
+      document.getElementById('productsCta').style.display = '';
+    }
+
+    // ─── Contact Form
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var status = document.getElementById('contactStatus');
+      var form = e.target;
+      var data = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value,
+      };
+
+      status.textContent = 'Sending...';
+      status.className = 'form-status sending';
+
+      fetch(COSMO.apiUrl + '/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('Send failed');
+        return res.json();
+      })
+      .then(function() {
+        status.textContent = 'Message sent! I\'ll be in touch.';
+        status.className = 'form-status success';
+        form.reset();
+      })
+      .catch(function() {
+        status.textContent = 'Something went wrong. Try emailing me directly.';
+        status.className = 'form-status error';
+      });
+    });
+
+    // ─── Footer
+    document.getElementById('footerPowered').innerHTML = 'Powered by <a href="' + COSMO.footerPoweredBy.url + '">' + COSMO.footerPoweredBy.label + '</a> + Claude';
+
+    var footerSocial = document.getElementById('footerSocial');
+    if (COSMO.social) {
+      Object.keys(COSMO.social).forEach(function(key) {
+        if (COSMO.social[key]) {
+          var a = document.createElement('a');
+          a.href = COSMO.social[key];
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'footer-social-link';
+          a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+          footerSocial.appendChild(a);
+        }
+      });
+    }
+  </script>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

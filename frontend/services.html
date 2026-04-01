@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Loading...</title>
+  <meta name="description" content="">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="/cosmo.config.js"></script>
+  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script>
+    document.title = 'Services — ' + COSMO.name;
+    document.querySelector('meta[name="description"]').content = COSMO.name + ' — professional services and consulting.';
+  </script>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="mainNav"></nav>
+
+  <!-- ─── PAGE HEADER ─── -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Services</h1>
+      <p class="page-subtitle" id="servicesSubtitle"></p>
+    </div>
+  </section>
+
+  <!-- ─── SERVICES GRID ─── -->
+  <section class="section">
+    <div class="container">
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="section callout-section" id="servicesCta">
+    <div class="container callout-content">
+      <h2>Have a project in mind?</h2>
+      <p>Let's talk about what you need. Ask the AI for a quick overview, or get in touch directly.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" id="servicesAskAi">Ask the AI</button>
+        <a class="btn btn-secondary" href="/#ctaBar">Contact Me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-powered" id="footerPowered"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+  </footer>
+
+  <script src="/js/markdown.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/chat-widget.js"></script>
+
+  <script>
+    var services = COSMO.services;
+    var grid = document.getElementById('servicesGrid');
+    var subtitle = document.getElementById('servicesSubtitle');
+    var ctaSection = document.getElementById('servicesCta');
+
+    if (!services || !services.length) {
+      subtitle.textContent = 'Services information is not currently available.';
+      grid.innerHTML = '<div class="empty-state"><p>No services listed yet. Check back soon.</p></div>';
+      ctaSection.style.display = 'none';
+    } else {
+      subtitle.textContent = 'What I can build for you.';
+
+      services.forEach(function(service) {
+        var card = document.createElement('div');
+        card.className = 'card service-card';
+        card.innerHTML = '<h3>' + service.title + '</h3>'
+                       + '<p>' + service.description + '</p>';
+        grid.appendChild(card);
+      });
+    }
+
+    // ─── Ask the AI
+    document.getElementById('servicesAskAi').addEventListener('click', function() {
+      if (window.openChatWith) {
+        window.openChatWith('What services does ' + COSMO.firstName + ' offer? Give me the full rundown.');
+      }
+    });
+
+    // ─── Footer
+    document.getElementById('footerPowered').innerHTML = 'Powered by <a href="' + COSMO.footerPoweredBy.url + '">' + COSMO.footerPoweredBy.label + '</a> + Claude';
+
+    var footerSocial = document.getElementById('footerSocial');
+    if (COSMO.social) {
+      Object.keys(COSMO.social).forEach(function(key) {
+        if (COSMO.social[key]) {
+          var a = document.createElement('a');
+          a.href = COSMO.social[key];
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'footer-social-link';
+          a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+          footerSocial.appendChild(a);
+        }
+      });
+    }
+  </script>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Loading...</title>
+  <meta name="description" content="">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="/cosmo.config.js"></script>
+  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script>
+    document.title = 'Projects — ' + COSMO.name;
+    document.querySelector('meta[name="description"]').content = COSMO.name + ' — featured projects and technical deep dives.';
+  </script>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="mainNav"></nav>
+
+  <!-- ─── PAGE HEADER ─── -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Projects</h1>
+      <p class="page-subtitle">Production systems I've designed, built, and shipped. Click "Ask the AI" on any project to get a technical deep dive.</p>
+    </div>
+  </section>
+
+  <!-- ─── PROJECT DETAILS ─── -->
+  <section class="section">
+    <div class="container">
+      <div class="project-detail-list" id="projectDetailList"></div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-powered" id="footerPowered"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+  </footer>
+
+  <script src="/js/markdown.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/chat-widget.js"></script>
+
+  <script>
+    var list = document.getElementById('projectDetailList');
+
+    COSMO.projects.forEach(function(project) {
+      var card = document.createElement('div');
+      card.className = 'card project-detail-card';
+
+      // Badges
+      var badges = '';
+      if (project.badges && project.badges.length) {
+        badges = '<div class="badge-row">' + project.badges.map(function(b) {
+          return '<span class="badge">' + b + '</span>';
+        }).join('') + '</div>';
+      }
+
+      // Details list
+      var details = '';
+      if (project.details && project.details.length) {
+        details = '<ul class="project-details">' + project.details.map(function(d) {
+          return '<li>' + d + '</li>';
+        }).join('') + '</ul>';
+      }
+
+      // Actions
+      var actions = '';
+      if (project.chatPrompt) {
+        actions += '<button class="btn btn-primary btn-sm project-ask-ai" data-prompt="' + project.chatPrompt.replace(/"/g, '&quot;') + '">'
+                 + (project.chatLabel || 'Ask the AI')
+                 + '</button>';
+      }
+      if (project.github) {
+        actions += '<a href="' + project.github + '" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">View on GitHub</a>';
+      }
+
+      card.innerHTML = '<div class="project-detail-header">'
+                     + '<h2>' + project.name + '</h2>'
+                     + '<p class="project-tagline">' + project.tagline + '</p>'
+                     + '</div>'
+                     + badges
+                     + '<p class="project-description">' + project.description + '</p>'
+                     + details
+                     + '<div class="card-actions">' + actions + '</div>';
+
+      list.appendChild(card);
+    });
+
+    // ─── "Ask the AI" buttons
+    document.querySelectorAll('.project-ask-ai').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var prompt = this.getAttribute('data-prompt');
+        if (window.openChatWith) window.openChatWith(prompt);
+      });
+    });
+
+    // ─── Footer
+    document.getElementById('footerPowered').innerHTML = 'Powered by <a href="' + COSMO.footerPoweredBy.url + '">' + COSMO.footerPoweredBy.label + '</a> + Claude';
+
+    var footerSocial = document.getElementById('footerSocial');
+    if (COSMO.social) {
+      Object.keys(COSMO.social).forEach(function(key) {
+        if (COSMO.social[key]) {
+          var a = document.createElement('a');
+          a.href = COSMO.social[key];
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'footer-social-link';
+          a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+          footerSocial.appendChild(a);
+        }
+      });
+    }
+  </script>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

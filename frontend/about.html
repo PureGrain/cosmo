@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Loading...</title>
+  <meta name="description" content="">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="/cosmo.config.js"></script>
+  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script>
+    document.title = 'About — ' + COSMO.name;
+    document.querySelector('meta[name="description"]').content = COSMO.about.subtitle;
+  </script>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="mainNav"></nav>
+
+  <!-- ─── PAGE HEADER ─── -->
+  <section class="page-header">
+    <div class="container">
+      <h1 id="aboutHeadline"></h1>
+      <p class="page-subtitle" id="aboutSubtitle"></p>
+    </div>
+  </section>
+
+  <!-- ─── STATS ─── -->
+  <section class="section">
+    <div class="container">
+      <div class="proof-grid" id="aboutStats"></div>
+    </div>
+  </section>
+
+  <!-- ─── CAREER TIMELINE ─── -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Career Timeline</h2>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- ─── SKILLS GRID ─── -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Skills &amp; Technologies</h2>
+      <div class="skills-grid" id="skillsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ─── WORK TRAITS ─── -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">How I Work</h2>
+      <div class="traits-grid" id="traitsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="section callout-section">
+    <div class="container callout-content">
+      <h2>Want to know more?</h2>
+      <p>The AI chatbot on this site knows my entire career history, projects, and skill set. Ask it anything.</p>
+      <button class="btn btn-primary" id="aboutCtaChat">Ask the AI About Me</button>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-powered" id="footerPowered"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+  </footer>
+
+  <script src="/js/markdown.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/chat-widget.js"></script>
+
+  <script>
+    var about = COSMO.about;
+
+    // ─── Header
+    document.getElementById('aboutHeadline').textContent = about.headline;
+    document.getElementById('aboutSubtitle').textContent = about.subtitle;
+
+    // ─── Stats
+    var statsGrid = document.getElementById('aboutStats');
+    about.stats.forEach(function(stat) {
+      var div = document.createElement('div');
+      div.className = 'proof-item';
+      div.innerHTML = '<span class="proof-number">' + stat.number + '</span>'
+                    + '<span class="proof-label">' + stat.label + '</span>';
+      statsGrid.appendChild(div);
+    });
+
+    // ─── Timeline
+    var timeline = document.getElementById('timeline');
+    about.timeline.forEach(function(entry, i) {
+      var item = document.createElement('div');
+      item.className = 'timeline-item';
+      item.innerHTML = '<div class="timeline-marker"></div>'
+                     + '<div class="timeline-content">'
+                     + '<h3>' + entry.title + '</h3>'
+                     + '<p class="timeline-meta">' + entry.period + ' &middot; ' + entry.location + '</p>'
+                     + '<p>' + entry.description + '</p>'
+                     + '</div>';
+      timeline.appendChild(item);
+    });
+
+    // ─── Skills Grid
+    var skillsGrid = document.getElementById('skillsGrid');
+    about.skills.forEach(function(group) {
+      var card = document.createElement('div');
+      card.className = 'card skill-card';
+      var badges = group.badges.map(function(b) {
+        return '<span class="badge">' + b + '</span>';
+      }).join('');
+      card.innerHTML = '<h3>' + group.group + '</h3>'
+                     + '<div class="badge-row">' + badges + '</div>';
+      skillsGrid.appendChild(card);
+    });
+
+    // ─── Work Traits
+    var traitsGrid = document.getElementById('traitsGrid');
+    about.traits.forEach(function(trait) {
+      var card = document.createElement('div');
+      card.className = 'card trait-card';
+      card.innerHTML = '<h3>' + trait.title + '</h3>'
+                     + '<p>' + trait.description + '</p>';
+      traitsGrid.appendChild(card);
+    });
+
+    // ─── CTA
+    document.getElementById('aboutCtaChat').addEventListener('click', function() {
+      if (window.openChatWith) {
+        window.openChatWith('Tell me about ' + COSMO.firstName + ' — background, experience, and what makes them stand out.');
+      }
+    });
+
+    // ─── Footer
+    document.getElementById('footerPowered').innerHTML = 'Powered by <a href="' + COSMO.footerPoweredBy.url + '">' + COSMO.footerPoweredBy.label + '</a> + Claude';
+
+    var footerSocial = document.getElementById('footerSocial');
+    if (COSMO.social) {
+      Object.keys(COSMO.social).forEach(function(key) {
+        if (COSMO.social[key]) {
+          var a = document.createElement('a');
+          a.href = COSMO.social[key];
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'footer-social-link';
+          a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+          footerSocial.appendChild(a);
+        }
+      });
+    }
+  </script>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

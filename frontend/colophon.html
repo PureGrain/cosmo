@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Loading...</title>
+  <meta name="description" content="">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script src="/cosmo.config.js"></script>
+  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script>
+    document.title = 'How It Works — ' + COSMO.name;
+    document.querySelector('meta[name="description"]').content = COSMO.colophon.subtitle;
+  </script>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav id="mainNav"></nav>
+
+  <!-- ─── PAGE HEADER ─── -->
+  <section class="page-header">
+    <div class="container">
+      <h1 id="colophonHeadline"></h1>
+      <p class="page-subtitle" id="colophonSubtitle"></p>
+    </div>
+  </section>
+
+  <!-- ─── ARCHITECTURE OVERVIEW ─── -->
+  <section class="section">
+    <div class="container colophon-content">
+
+      <!-- Architecture Diagram -->
+      <div class="card colophon-card">
+        <h2>Architecture</h2>
+        <p>This site uses a clean split architecture: a static frontend served from a CDN, backed by a lightweight API server that handles the chatbot, contact form, and analytics.</p>
+        <div class="architecture-diagram">
+          <div class="arch-row">
+            <div class="arch-box arch-frontend">
+              <strong>Static Frontend</strong>
+              <span>HTML / CSS / JS</span>
+              <span>CDN Edge Network</span>
+            </div>
+            <div class="arch-arrow">&rarr;</div>
+            <div class="arch-box arch-api">
+              <strong>API Server</strong>
+              <span>Node.js / Express</span>
+              <span>Chat, Contact, Analytics</span>
+            </div>
+            <div class="arch-arrow">&rarr;</div>
+            <div class="arch-box arch-ai">
+              <strong>Claude API</strong>
+              <span>Anthropic</span>
+              <span>AI Chatbot Engine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The Chatbot -->
+      <div class="card colophon-card">
+        <h2>The Chatbot</h2>
+        <p>The AI chatbot on this site isn't a generic widget. It's a custom-built conversational agent powered by Claude (Anthropic's AI). It has access to a detailed knowledge base covering career history, projects, skills, and services.</p>
+        <ul>
+          <li><strong>Streaming responses:</strong> Uses Server-Sent Events (SSE) for real-time, token-by-token output</li>
+          <li><strong>Context-aware:</strong> The system prompt includes the full resume, project details, and conversation history</li>
+          <li><strong>Guardrails:</strong> Deflection rules prevent the bot from discussing topics outside the portfolio scope</li>
+          <li><strong>Markdown rendering:</strong> Responses are rendered with proper formatting, code blocks, and links</li>
+          <li><strong>Configurable personality:</strong> Bot name, tone, and suggestions are all defined in the config file</li>
+        </ul>
+      </div>
+
+      <!-- Frontend -->
+      <div class="card colophon-card">
+        <h2>Frontend</h2>
+        <p>The entire frontend is static HTML, CSS, and vanilla JavaScript. No React, no build step, no framework. Every page is config-driven from a single JavaScript file.</p>
+        <ul>
+          <li><strong>Config-driven:</strong> One config file controls all content, branding, and navigation</li>
+          <li><strong>Dark/light theme:</strong> System-aware theme toggle with smooth transitions and persistent preference</li>
+          <li><strong>Responsive:</strong> Mobile-first layout that works on all devices</li>
+          <li><strong>Performance:</strong> No bundler, no virtual DOM, no hydration. Just fast, cacheable static files</li>
+          <li><strong>Accessibility:</strong> Semantic HTML, keyboard navigation, and proper color contrast</li>
+        </ul>
+      </div>
+
+      <!-- API Server -->
+      <div class="card colophon-card">
+        <h2>API Server</h2>
+        <p>A minimal Node.js + Express server handles three responsibilities: the chatbot, the contact form, and visitor analytics. Designed for single-instance deployment with low resource usage.</p>
+        <ul>
+          <li><strong>Chat endpoint:</strong> Proxies requests to the Claude API with system prompt injection and conversation management</li>
+          <li><strong>Contact endpoint:</strong> Validates input, checks for spam patterns, and forwards messages via email</li>
+          <li><strong>Rate limiting:</strong> Per-IP limits on chat and contact endpoints to prevent abuse</li>
+          <li><strong>CORS:</strong> Whitelist-based origin control so only the portfolio domain can call the API</li>
+          <li><strong>Stateless:</strong> No database required. Conversations live in memory for the session duration only</li>
+        </ul>
+      </div>
+
+      <!-- CI/CD Pipeline -->
+      <div class="card colophon-card">
+        <h2>CI/CD Pipeline</h2>
+        <p>Deployment is automated through a standard continuous delivery pipeline. Push to main, and the site updates.</p>
+        <ul>
+          <li><strong>Frontend:</strong> Deployed to a CDN (e.g., Cloudflare Pages, Netlify, or Vercel) on every push to the main branch</li>
+          <li><strong>API:</strong> Deployed to a server or container host with automatic restart on failure</li>
+          <li><strong>Environment:</strong> Secrets managed via environment variables, never committed to the repo</li>
+          <li><strong>Preview:</strong> Branch deployments create preview URLs for testing before merge</li>
+        </ul>
+      </div>
+
+      <!-- Visitor Analytics -->
+      <div class="card colophon-card">
+        <h2>Visitor Analytics</h2>
+        <p>Lightweight, privacy-respecting analytics are collected server-side. No third-party tracking scripts, no cookies, no fingerprinting.</p>
+        <ul>
+          <li><strong>Page views:</strong> Tracked server-side via a simple beacon endpoint</li>
+          <li><strong>Chat analytics:</strong> Conversation count, message count, and popular questions (no content stored)</li>
+          <li><strong>No PII:</strong> IP addresses are hashed, not stored. No cookies are set for tracking</li>
+          <li><strong>Dashboard:</strong> Analytics data is available through the API for the site owner</li>
+        </ul>
+      </div>
+
+      <!-- Security Stack -->
+      <div class="card colophon-card">
+        <h2>Security Stack</h2>
+        <p>Multiple layers of protection keep the site and its visitors safe.</p>
+        <ul>
+          <li><strong>Bot protection:</strong> Cloudflare Turnstile (optional) on contact forms to block spam without CAPTCHAs</li>
+          <li><strong>Honeypot detection:</strong> Hidden form fields catch automated bots that fill every input</li>
+          <li><strong>Rate limiting:</strong> Per-IP request limits on all API endpoints</li>
+          <li><strong>Input sanitization:</strong> All user input is validated and sanitized before processing</li>
+          <li><strong>HTTPS everywhere:</strong> TLS enforced on both frontend and API</li>
+          <li><strong>Content Security Policy:</strong> Strict CSP headers limit what scripts and resources can load</li>
+        </ul>
+      </div>
+
+      <!-- Built With Claude Code -->
+      <div class="card colophon-card">
+        <h2>Built With Claude Code</h2>
+        <p>This entire portfolio — frontend, API server, chatbot, deployment pipeline — was built collaboratively with Claude Code, Anthropic's AI coding assistant. Every file was written, reviewed, and iterated on in a human-AI pair programming workflow.</p>
+        <p>The result is a production-grade, open-source portfolio template that anyone can fork, configure, and deploy as their own AI-powered portfolio.</p>
+        <div class="card-actions">
+          <a id="colophonRepoLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View the Source Code</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-powered" id="footerPowered"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+  </footer>
+
+  <script src="/js/markdown.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/chat-widget.js"></script>
+
+  <script>
+    // ─── Header
+    document.getElementById('colophonHeadline').textContent = COSMO.colophon.headline;
+    document.getElementById('colophonSubtitle').textContent = COSMO.colophon.subtitle;
+
+    // ─── Repo link
+    var repoLink = document.getElementById('colophonRepoLink');
+    repoLink.href = COSMO.footerPoweredBy.url;
+
+    // ─── Footer
+    document.getElementById('footerPowered').innerHTML = 'Powered by <a href="' + COSMO.footerPoweredBy.url + '">' + COSMO.footerPoweredBy.label + '</a> + Claude';
+
+    var footerSocial = document.getElementById('footerSocial');
+    if (COSMO.social) {
+      Object.keys(COSMO.social).forEach(function(key) {
+        if (COSMO.social[key]) {
+          var a = document.createElement('a');
+          a.href = COSMO.social[key];
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'footer-social-link';
+          a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+          footerSocial.appendChild(a);
+        }
+      });
+    }
+  </script>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>
