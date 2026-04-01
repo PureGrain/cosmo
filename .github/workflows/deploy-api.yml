@@ -1,15 +1,27 @@
 name: Deploy API
 
+# Manual trigger only by default. To enable auto-deploy on push:
+# 1. Add VPS_SSH_KEY and VPS_HOST to repo Settings → Secrets
+# 2. Uncomment the push trigger below and remove workflow_dispatch
+
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'api/**'
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - 'api/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Check secrets
+        run: |
+          if [ -z "${{ secrets.VPS_SSH_KEY }}" ] || [ -z "${{ secrets.VPS_HOST }}" ]; then
+            echo "::error::VPS_SSH_KEY and VPS_HOST secrets are required. See docs/DEPLOYMENT.md"
+            exit 1
+          fi
+
       - name: Deploy to VPS
         run: |
           mkdir -p ~/.ssh
